@@ -118,7 +118,7 @@ exports.sendMessage = async (srcId, dstId, content) => {
       data: {
         content: content,
         srcId: srcId,
-        dstId: dstId
+        dstId: dstId 
       },
     })
     return result
