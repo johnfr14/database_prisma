@@ -98,8 +98,47 @@ exports.getUserById = async (userId) => {
 
 exports.getUserByUsername = async (username) => {
   // A implementer
+  try {
+    const result = await prisma.user.findUnique({
+      where: {
+        username: username,
+      },
+    })
+    return result
+  } catch (e) {
+    customizeError(e)
+    throw e
+  }
 }
 
 exports.sendMessage = async (srcId, dstId, content) => {
   // A Implementer
+  try {
+    const result = await prisma.message.create({
+      data: {
+        content: content,
+        srcId: srcId,
+        dstId: dstId
+      },
+    })
+    return result
+  } catch (e) {
+    customizeError(e)
+    throw e
+  }
+}
+
+exports.readMessage = async (dstId) => {
+  // A Implementer
+  try {
+    const result = await prisma.message.findMany({
+      where: {
+        dstId: dstId,
+      },
+    })
+    return result
+  } catch (e) {
+    customizeError(e)
+    throw e
+  }
 }

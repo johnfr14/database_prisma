@@ -1,7 +1,7 @@
 const express = require('express')
 const db = require('./mydb')
 
-const IP = '192.168.0.10'
+const IP = '127.0.0.1'
 const PORT = 3333
 
 const app = express()
@@ -105,14 +105,51 @@ app.get('/myinfo', async (req, res) => {
 
 app.get('/user_by_username/:username', async (req, res) => {
   // A implementer
+  try {
+    const result = await db.getUserByUsername(req.params.username)
+    res.json({ status: 'success', data: { user: result } })
+  } catch (e) {
+    if (e.status === 'fail') {
+      res.status(400).json({ status: e.status, data: e.dataError })
+    } else {
+      // e.status === 50X
+      res.status(500).json({ status: e.status, message: e.message })
+    }
+  }
 })
 
 app.post('/send_message/:username', async (req, res) => {
   // A implementer
+  const content = req.body.content
+  try {
+    const dstId = (await db.getUserByUsername(req.params.username)).id
+    const srcId = (await db.getUserByApiKey(req.userId))
+    const result = await db.sendMessage(srcId, dstId, content)
+    res.json({status: 200, data: result})
+  } catch (e) {
+    if (e.status === 'fail') {
+      res.status(400).json({ status: e.status, data: e.dataError })
+    } else {
+      // e.status === 50X
+      res.status(500).json({ status: e.status, message: e.message })
+    }
+  }
 })
 
 app.get('/read_message/', async (req, res) => {
   // A implementer
+  const dstId = (await db.getUserByApiKey(req.userId))
+  try {
+    const result = await db.readMessage(dstId)
+    res.json({ status: 200, data: result })
+  } catch (e) {
+    if (e.status === 'fail') {
+      res.status(400).json({ status: e.status, data: e.dataError })
+    } else {
+      // e.status === 50X
+      res.status(500).json({ status: e.status, message: e.message })
+    }
+  }
 })
 
 app.listen(PORT, IP, () => {
