@@ -12,8 +12,9 @@ generator client {
 
 model User {
   id               Int       @id @default(autoincrement())
-  username         String    @unique @db.VarChar(30)
+  username         String    @db.VarChar(30)
   email            String    @unique
+  password         String    @db.VarChar(30)
   createdAt        DateTime  @default(now()) @map(name: "created_at")
   apiKey           ApiKey?
   active           Boolean   @default(true)

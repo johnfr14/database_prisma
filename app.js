@@ -1,5 +1,6 @@
 const express = require('express')
 const db = require('./mydb')
+const cors = require('cors')
 
 const IP = '127.0.0.1'
 const PORT = 3333
@@ -42,7 +43,7 @@ const validateApiKey = async (req, res, next) => {
     res.status(500).json({ code: 'error', message: 'Internal server error' })
   }
 }
-
+app.use(cors())
 app.use(express.urlencoded({ extended: false })) // to support URL-encoded bodies
 app.use(express.json()) // to support JSON-encoded bodies
 
